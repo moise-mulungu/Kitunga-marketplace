@@ -64,3 +64,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "rack-cors", "~> 3.0"
+
+gem "active_model_serializers", "~> 0.10.15"

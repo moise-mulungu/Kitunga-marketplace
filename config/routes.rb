@@ -1,11 +1,21 @@
 Rails.application.routes.draw do
+  
   namespace :api do
     namespace :v1 do
+      devise_for :users,
+        defaults: { format: :json },
+        controllers: {
+          sessions: 'api/v1/users/sessions',
+          registrations: 'api/v1/users/registrations',
+          passwords: 'api/v1/users/passwords',
+          confirmations: 'api/v1/users/confirmations',
+          omniauth_callbacks: 'api/v1/users/omniauth_callbacks'
+        }
+
       resources :payments
       resources :order_items
       resources :orders
       resources :products
-      resources :users
       resources :order_items
     end
   end

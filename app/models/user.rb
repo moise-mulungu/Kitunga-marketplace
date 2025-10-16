@@ -45,4 +45,23 @@ class User < ApplicationRecord
     end
     user
   end
+
+  # Two-factor helpers (TOTP)
+  def generate_totp_secret
+    self.otp_secret ||= ROTP::Base32.random_base32
+    save(validate: false)
+    otp_secret
+  end
+
+  def provisioning_uri(issuer: 'Kitunga')
+    return nil unless otp_secret
+    label = "#{issuer}:#{email}"
+    ROTP::TOTP.new(otp_secret).provisioning_uri(label, issuer: issuer)
+  end
+
+  def verify_totp(code)
+    return false unless otp_secret
+    totp = ROTP::TOTP.new(otp_secret)
+    totp.verify(code, drift_behind: 30)
+  end
 end

@@ -17,6 +17,12 @@ Rails.application.routes.draw do
       resources :orders
       resources :products
       resources :order_items
+      namespace :users do
+        get 'two_factor/provision', to: 'two_factor#provision'
+        post 'two_factor/confirm', to: 'two_factor#confirm'
+        post 'two_factor/enable', to: 'two_factor#enable'
+        post 'two_factor/disable', to: 'two_factor#disable'
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

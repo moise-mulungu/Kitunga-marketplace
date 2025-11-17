@@ -1,3 +1,4 @@
+require 'dotenv/load'
 require_relative "boot"
 
 require "rails"
@@ -10,27 +11,29 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "rails/test_unit/railtie"
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# config/application.rb
 module KitungaMarket
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
-
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
-
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    # ...
     config.api_only = true
+
+    # Ensure cookie and session middleware are loaded before OmniAuth/Devise
+    # middleware so OmniAuth has access to a session (required by
+    # omniauth-rails_csrf_protection and the OAuth state handshake).
+    # Insert cookies at the very top of the stack and the session store
+    # immediately after it with appropriate cookie attributes to allow
+    # cross-origin flows (frontend on a different port/domain).
+    config.middleware.insert_before 0, ActionDispatch::Cookies
+    # In development we prefer :lax (works with top-level GET navigations) while
+    # in production we use :none so cross-site frontends can receive cookies.
+    session_same_site = Rails.env.production? ? :none : :lax
+    config.middleware.insert_after ActionDispatch::Cookies, ActionDispatch::Session::CookieStore,
+      key: '_kitunga_session', secure: Rails.env.production?, same_site: session_same_site
+    config.middleware.use ActionDispatch::Flash
+
+    # Keep method override as the working app had it.
+    config.middleware.use Rack::MethodOverride
   end
 end

@@ -15,12 +15,21 @@ module Api
 
         def show
           self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+
           if resource.errors.empty?
-            render json: { message: 'Account confirmed.' }
+            # After confirming, send them to login page
+            redirect_to "http://localhost:3001/login?confirmed=true"
           else
-            render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+            redirect_to "http://localhost:3001/login?error=invalid_token"
           end
         end
+        
+        private
+
+        def after_confirmation_path_for(resource_name, resource)
+          "http://localhost:3001/login"
+        end
+
       end
     end
   end

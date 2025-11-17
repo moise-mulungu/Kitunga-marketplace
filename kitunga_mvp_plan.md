@@ -37,7 +37,7 @@ The goal is to validate:
 
 ### 3. Checkout & Payments
 
-* **Cart system** with quantity update and price total.
+* **Cart system** with quantity update and price total. 
 * **Single integrated payment method** at launch (choose one of these depending on target region):
 
   * **Flutterwave** or **Paystack** (mobile money + card) for African markets.
@@ -84,6 +84,13 @@ The goal is to validate:
 ---
 
 ## 🗓️ Updated Implementation Timeline (Backend-focused)
+
+Goals:
+
+* Set up the Rails API backend and React frontend foundations for further development.
+* Ensure both environments can communicate securely through CORS.
+* Establish database, folder structure, and Git version control.
+* Deliver a working development environment ready for authentication and API expansion.
 
 ### Phase 2 – Full Authentication & API Routes (Week 3)
 

@@ -17,10 +17,14 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# mini-magick for image processing with Active Storage
+gem "mini_magick", "~> 4.9"
+
 # Devise gem for authentication
 gem "devise"
 gem "devise-jwt"
 gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 gem "rotp"
 gem "devise-two-factor"
 
@@ -36,7 +40,10 @@ gem "solid_queue"
 gem "solid_cable"
 
 # Use environment variables from .env.* files
-gem 'dotenv-rails'
+gem 'dotenv-rails', groups: [:development, :test]
+
+# Use google recaptcha
+gem 'recaptcha', require: 'recaptcha/rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -64,6 +71,11 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  # Preview emails in the browser during development. Prefer letter_opener_web
+  # which provides a browsable mailbox at /letter_opener. Falls back to
+  # letter_opener if letter_opener_web isn't available.
+  gem 'letter_opener_web'
+  gem 'letter_opener'
 end
 
 group :test do

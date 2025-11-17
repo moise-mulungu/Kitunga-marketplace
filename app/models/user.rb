@@ -13,15 +13,27 @@ class User < ApplicationRecord
 
   # Two-factor (TOTP) helper
   include Devise::TwoFactorable if defined?(Devise::TwoFactorable)
+    # Needed for serving Active Storage files
+  include Rails.application.routes.url_helpers
+  # direct :rails_blob do |blob|
+  #   route_for(:rails_service_blob, blob.signed_id, blob.filename)
+  # end
 
   has_many :products, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :payments, through: :orders
+  has_one_attached :avatar
 
   enum :role, { customer: "customer", seller: "seller", admin: "admin" }
 
   validates :full_name, :email, presence: true
   validates :email, uniqueness: true
+
+    # 👉 Seller-only validations
+  validates :category, presence: true, if: :seller?
+  validates :business_name, presence: true, if: :seller?
+  validates :address, presence: true, if: :seller?
+  validates :phone, presence: true, if: :seller?
 
   def seller?
     role == "seller"
@@ -44,6 +56,14 @@ class User < ApplicationRecord
       )
     end
     user
+  end
+
+  def profile_image_url
+    if avatar.attached?
+      Rails.application.routes.url_helpers.url_for(avatar)
+    else
+      image_url # a column in your users table (e.g. for Google photo)
+    end
   end
 
   # Two-factor helpers (TOTP)

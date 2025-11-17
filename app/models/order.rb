@@ -4,8 +4,8 @@ class Order < ApplicationRecord
   has_many :products, through: :order_items
   has_one :payment, dependent: :destroy
 
-  enum :status, { pending: "pending", completed: "completed", cancelled: "cancelled" }
-  enum :payment_status, { unpaid: "unpaid", paid: "paid", refunded: "refunded" }
+  enum :status, { pending: "pending", complete: "complete", cancelled: "cancelled", shipping: "shipping" }
+  enum :payment_status, { unpaid: "unpaid", paid: "paid", failed: "failed", refunded: "refunded" }
 
   before_save :calculate_total_amount
 

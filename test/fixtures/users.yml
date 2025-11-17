@@ -2,9 +2,9 @@
 
 one:
   full_name: MyString
-  email: MyString
-  password_digest: MyString
-  role: MyString
+  email: user_one@example.com
+  role: customer
+  encrypted_password: ""
   business_name: MyString
   category: MyString
   address: MyString
@@ -12,9 +12,9 @@ one:
 
 two:
   full_name: MyString
-  email: MyString
-  password_digest: MyString
-  role: MyString
+  email: user_two@example.com
+  role: customer
+  encrypted_password: ""
   business_name: MyString
   category: MyString
   address: MyString

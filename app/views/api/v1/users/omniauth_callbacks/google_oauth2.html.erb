@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Signing in...</title>
+  </head>
+  <body>
+    <script>
+      (function() {
+        var payload = {
+          access_token: "<%= j access_token %>",
+          user: <%= raw(user.to_json) %>
+        };
+        // Post message to opener (frontend)
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({ type: 'oauth', payload: payload }, '*');
+          window.close();
+        } else {
+          // Fallback: display token
+          document.body.innerText = 'Signed in. Token: ' + payload.access_token;
+        }
+      })();
+    </script>
+  </body>
+</html>

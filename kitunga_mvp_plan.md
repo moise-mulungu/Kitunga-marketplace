@@ -6,6 +6,15 @@ The goal is to validate:
 1. **Seller demand** to list and sell products.
 2. **Customer willingness** to buy through the platform.
 
+```markdown
+## 🎯 MVP Objective
+
+Launch a **two-sided online marketplace** where small businesses can create product listings and customers can browse, purchase, and pay (including mobile money).
+The goal is to validate:
+
+1. **Seller demand** to list and sell products.
+2. **Customer willingness** to buy through the platform.
+
 ---
 
 ## 🗂️ Core Scope
@@ -28,7 +37,7 @@ The goal is to validate:
 
 ### 3. Checkout & Payments
 
-* **Cart system** with quantity update and price total.
+* **Cart system** with quantity update and price total. 
 * **Single integrated payment method** at launch (choose one of these depending on target region):
 
   * **Flutterwave** or **Paystack** (mobile money + card) for African markets.
@@ -64,74 +73,144 @@ The goal is to validate:
 
 ---
 
-## 🗓️ Implementation Timeline (Approx. 8–10 Weeks)
+## � Current status (as of Oct 16, 2025)
 
-### **Phase 1 – Setup & Foundation (Week 1–2)**
+- Phase 1 (Frontend design & initial Next.js implementation): DONE ✅
+  - The UI and frontend flows have been implemented and wired to mock data.
+- Remaining: full backend authentication, implement API routes, and backend implementations for products, cart, orders, payments and admin features.
 
-* Finalize wireframes and UI design.
-* Set up GitHub repository, CI/CD pipelines, and environment configuration.
-* Initialize Next.js frontend and Rails API backend projects.
-* Design database schema (Users, Products, Orders, Payments).
-
-### **Phase 2 – Authentication & Profiles (Week 3)**
-
-* Implement email/password signup/login with JWT or Devise-JWT (Rails).
-* Build separate flows for Seller vs. Customer roles.
-* Create Seller profile page (business name, category, address).
-
-### **Phase 3 – Product Management (Week 4–5)**
-
-* Seller CRUD operations: add/edit/delete product with image upload to S3.
-* Public catalog page with category filters and search.
-* Individual product detail page.
-
-### **Phase 4 – Cart & Checkout (Week 6–7)**
-
-* Cart management (add/remove/update items).
-* Integrate chosen payment gateway (Flutterwave/Paystack/Stripe).
-* Implement order confirmation page and email receipt.
-
-### **Phase 5 – Dashboards & Admin (Week 8)**
-
-* Seller dashboard: view and update order status.
-* Simple admin dashboard for platform owner.
-* Final UI polish, responsive testing (desktop + mobile).
-
-### **Phase 6 – QA & Launch (Week 9–10)**
-
-* End-to-end testing, security review, load testing.
-* Deploy to production (Vercel + Render/Fly.io).
-* Invite a small group of sellers/customers for beta feedback.
+> Because the frontend is ready, the next work items are backend-focused: Phase 2 (auth + routes) plus backend work in Phases 3 and 4.
 
 ---
 
-## 🛠️ Post-MVP (Future Enhancements)
+## 🗓️ Updated Implementation Timeline (Backend-focused)
 
-These are intentionally **not** in the MVP, but you can add them after you validate traction:
+Goals:
 
-* Ratings & reviews.
-* Advanced seller analytics and inventory management.
-* Multiple payment methods and currencies.
-* Referral/coupon system.
-* Real-time chat between sellers and customers.
-* Logistics/shipping integrations.
+* Set up the Rails API backend and React frontend foundations for further development.
+* Ensure both environments can communicate securely through CORS.
+* Establish database, folder structure, and Git version control.
+* Deliver a working development environment ready for authentication and API expansion.
+
+### Phase 2 – Full Authentication & API Routes (Week 3)
+
+Backend work only. Goals:
+
+* Implement secure auth (email/password) with JWT (Devise + Devise-JWT or custom JWT). Include email verification and password reset.
+* Role support (customer, seller, admin) and role-based access control on API endpoints.
+* Implement token refresh/revoke and a JWT denylist (already scaffolded in repo as `jwt_denylist`).
+* Create the canonical API routes needed by the frontend (see API routes below).
+
+Acceptance criteria:
+
+* Users can sign up (customer or seller), confirm email, sign in, refresh token, and sign out (token revoked).
+* Protected endpoints return 401 for missing/invalid tokens and 403 for forbidden roles.
+* Password reset emails work end-to-end.
+
+### Phase 3 – Backend: Products & Seller Management (Week 4–5)
+
+Backend work only. Goals:
+
+* Implement product CRUD with image upload support to S3 (or local storage in dev).
+* Implement product search and category filtering endpoints used by the frontend.
+* Expose seller profile endpoints (create/edit seller data) and seller order listing.
+
+Acceptance criteria:
+
+* Sellers can create/update/delete products via API and images persist in storage.
+* Public listing, category filters and product details endpoints return the expected JSON shape for the frontend.
+
+### Phase 4 – Backend: Cart, Orders & Payments (Week 6–7)
+
+Backend work only. Goals:
+
+* Implement cart persistence (session-backed or DB-backed per user) and order creation flow.
+* Integrate chosen payment gateway (Flutterwave/Paystack/Stripe) on the server side and validate payment callbacks/webhooks.
+* Implement payment records and update order status from payment events.
+
+Acceptance criteria:
+
+* Customers can create an order from their cart via API; orders are saved with order_items and subtotal calculations match frontend totals.
+* Payment flow returns success/failure back to frontend and webhooks update order/payment records reliably.
+
+### Phase 5 – Dashboards, Admin & Finalization (Week 8)
+
+* Implement seller and admin dashboards endpoints: order management, user/product moderation, and simple reporting.
+* Final API polish, pagination, input validation, rate limiting basics, and API documentation (Postman/OpenAPI).
+
+### Phase 6 – QA & Launch (Week 9–10)
+
+* End-to-end testing, security review, load testing, and deploy to production.
 
 ---
 
-## ✅ Deliverables at Launch
+## 🔌 API Routes (suggested canonical list)
 
-* **Responsive web app** where:
+Authentication & users:
 
-  * Sellers can register, upload products, and manage orders.
-  * Customers can browse products, pay securely, and receive confirmations.
-* **Admin panel** for basic moderation.
-* **Deployed production environment** with SSL and a custom domain.
+* POST /api/auth/sign_up (role param: customer|seller)
+* POST /api/auth/sign_in -> { access_token, refresh_token }
+* POST /api/auth/refresh -> { access_token }
+* DELETE /api/auth/sign_out (revoke)
+* POST /api/auth/password/forgot
+* POST /api/auth/password/reset
+* GET /api/users/:id (public profile)
+* PUT /api/users/:id (profile update - auth required)
+
+Products & catalog:
+
+* GET /api/products
+* GET /api/products/:id
+* POST /api/products (seller only)
+* PUT /api/products/:id (seller only)
+* DELETE /api/products/:id (seller only)
+* GET /api/categories
+
+Cart, orders & payments:
+
+* GET /api/cart
+* POST /api/cart/items
+* PUT /api/cart/items/:id
+* DELETE /api/cart/items/:id
+* POST /api/orders (creates order from cart)
+* GET /api/orders/:id
+* GET /api/orders (user or seller filtered)
+* POST /api/payments (initiate payment)
+* POST /api/payments/webhook (payment gateway callbacks)
+
+Admin / Seller management:
+
+* GET /api/admin/users
+* PUT /api/admin/users/:id/deactivate
+* GET /api/seller/orders
+* PUT /api/seller/orders/:id/status
+
+Notes:
+
+* Use namespaced controllers under `api/` and versioning if desired (e.g., `/api/v1/...`).
+* Ensure strong parameter validation and consistent serializer outputs (see `serializers/` directory).
+
+---
+
+## ✅ Deliverables after backend phases 2–4
+
+* Fully functional authentication with JWT (email confirmation, password reset, refresh/revoke).
+* A complete REST API for products, cart, orders and payments consumed by the frontend.
+* Webhook handling for payment gateway and reliable order state updates.
+* Seller and admin endpoints for managing products, orders and users.
+
+---
+
+## Next steps (short-term)
+
+1. Prioritize Phase 2 backend tasks and wire up real auth endpoints to the existing frontend flows.
+2. Implement the JWT denylist / Devise-JWT integration and email flows.
+3. Implement the API routes above incrementally (auth → products → cart/orders → payments).
 
 ---
 
 ### Key Takeaway
 
-This plan keeps your MVP laser-focused:
+With the frontend complete, focus the next 4–6 weeks on backend work that unlocks real end-to-end functionality: authentication, the API routes the frontend uses, secure payments and seller/admin workflows.
 
-> *Enable sellers to list products and customers to purchase them with mobile-friendly payments.*
-> Everything else—analytics, reviews, complex marketing features—can wait until the market validates Kitunga.
+```

@@ -77,4 +77,13 @@ class Product < ApplicationRecord
 
     products
   end
+
+  include Rails.application.routes.url_helpers
+
+  def primary_image_url
+    return nil unless images.attached?
+
+    rails_blob_url(images.first, only_path: false)
+  end
+
 end

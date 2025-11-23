@@ -23,6 +23,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :payments, through: :orders
   has_one_attached :avatar
+  has_one :cart, dependent: :destroy
 
   enum :role, { customer: "customer", seller: "seller", admin: "admin" }
 

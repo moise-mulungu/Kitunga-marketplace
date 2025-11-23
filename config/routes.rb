@@ -26,6 +26,10 @@ Rails.application.routes.draw do
       resources :orders
       resources :order_items
       resources :payments
+      # Cart
+      resource :cart, only: [:show, :destroy], controller: 'carts'
+      resources :cart_items, only: [:create, :update, :destroy]
+      post "checkout", to: "checkouts#create"
 
   # Token refresh endpoint for rotating JWTs
   post '/users/refresh', to: 'users/token_refresh#create'

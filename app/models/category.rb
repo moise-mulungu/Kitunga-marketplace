@@ -12,7 +12,7 @@ class Category < ApplicationRecord
   scope :service_categories, -> { where(category_type: "service") }
 
   # Callbacks
-  before_validation :generate_slug, on: [:create, :update]
+  before_validation :generate_slug, on: [ :create, :update ]
 
   # Generate a URL-friendly slug from the name
   def generate_slug

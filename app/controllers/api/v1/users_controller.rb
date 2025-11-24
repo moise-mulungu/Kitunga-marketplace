@@ -1,28 +1,27 @@
 class Api::V1::UsersController < Api::V1::BaseController
-
   def index
     users = User.all
-    users = users.where(role: 'seller') if params[:role] == 'seller'
-    render json: users.as_json(methods: [:profile_image_url])
+    users = users.where(role: "seller") if params[:role] == "seller"
+    render json: users.as_json(methods: [ :profile_image_url ])
   end
 
   def sellers
-    sellers = User.where(role: 'seller')
+    sellers = User.where(role: "seller")
     render json: sellers
   end
 
 
   def show
     user = User.find(params[:id])
-    render json: user.as_json(methods: [:profile_image_url])
+    render json: user.as_json(methods: [ :profile_image_url ])
   end
 
   # Return the currently authenticated user (requires Authorization header)
   def me
     if current_user
-      render json: current_user.as_json(methods: [:profile_image_url])
+      render json: current_user.as_json(methods: [ :profile_image_url ])
     else
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 
@@ -40,8 +39,8 @@ class Api::V1::UsersController < Api::V1::BaseController
     user = User.find(params[:id])
     if user.update(user_params)
       render json: {
-        status: 'ok',
-        user: user.as_json(methods: [:profile_image_url])
+        status: "ok",
+        user: user.as_json(methods: [ :profile_image_url ])
       }
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
@@ -57,15 +56,15 @@ class Api::V1::UsersController < Api::V1::BaseController
   def setup
     user = current_user
 
-    unless user.role == 'seller'
-      return render json: { success: false, errors: ['Only sellers can complete setup'] }, status: :forbidden
+    unless user.role == "seller"
+      return render json: { success: false, errors: [ "Only sellers can complete setup" ] }, status: :forbidden
     end
 
     if user.update(user_params.slice(:business_name, :category, :address, :phone))
       # Send confirmation email after setup if not already confirmed
       user.send_confirmation_instructions if user.confirmed_at.nil?
 
-      render json: { success: true, message: 'Seller setup complete. Confirmation email sent.', user: user }
+      render json: { success: true, message: "Seller setup complete. Confirmation email sent.", user: user }
     else
       render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
     end

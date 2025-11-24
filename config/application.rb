@@ -1,4 +1,4 @@
-require 'dotenv/load'
+require "dotenv/load"
 require_relative "boot"
 
 require "rails"
@@ -30,7 +30,7 @@ module KitungaMarket
     # in production we use :none so cross-site frontends can receive cookies.
     session_same_site = Rails.env.production? ? :none : :lax
     config.middleware.insert_after ActionDispatch::Cookies, ActionDispatch::Session::CookieStore,
-      key: '_kitunga_session', secure: Rails.env.production?, same_site: session_same_site
+      key: "_kitunga_session", secure: Rails.env.production?, same_site: session_same_site
     config.middleware.use ActionDispatch::Flash
 
     # Keep method override as the working app had it.

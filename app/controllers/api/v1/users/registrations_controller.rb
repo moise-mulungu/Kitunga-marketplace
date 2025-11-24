@@ -10,11 +10,11 @@ module Api
           resource ||= self.resource
 
           if resource&.persisted?
-            if resource.role == 'seller'
+            if resource.role == "seller"
             resource.send_confirmation_instructions if resource.confirmed_at.nil?
 
             render json: {
-              message: 'Signup successful! Please confirm your email.',
+              message: "Signup successful! Please confirm your email.",
               user: {
                 id: resource.id,
                 full_name: resource.full_name,
@@ -27,7 +27,7 @@ module Api
               # Customers confirm email immediately
               resource.send_confirmation_instructions
               render json: {
-                message: 'Customer signed up successfully. Please confirm your email.',
+                message: "Customer signed up successfully. Please confirm your email.",
                 user: {
                   id: resource.id,
                   full_name: resource.full_name,
@@ -38,7 +38,7 @@ module Api
               }, status: :created
             end
           else
-            render json: { errors: resource ? resource.errors.full_messages : ['Sign up failed'] },
+            render json: { errors: resource ? resource.errors.full_messages : [ "Sign up failed" ] },
                    status: :unprocessable_entity
           end
         end

@@ -8,4 +8,3 @@ class CreateCarts < ActiveRecord::Migration[8.0]
     add_foreign_key :carts, :users, on_delete: :nullify
   end
 end
-

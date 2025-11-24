@@ -1,6 +1,6 @@
 class Api::V1::OrderItemsController <  Api::V1::BaseController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_order_item, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :set_order_item, only: [ :show, :update, :destroy ]
 
   def index
     order_items = OrderItem.all

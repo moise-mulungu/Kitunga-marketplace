@@ -36,7 +36,7 @@ class Api::V1::CheckoutsController < Api::V1::BaseController
         order: order.as_json(
           include: {
             order_items: {
-              include: { product: { only: [:title, :price] } }
+              include: { product: { only: [ :title, :price ] } }
             }
           }
         )

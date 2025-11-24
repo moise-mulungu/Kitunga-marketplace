@@ -4,7 +4,7 @@ class Cart < ApplicationRecord
 
   # Return decimal (BigDecimal) total
   def total_amount
-    cart_items.sum('COALESCE(subtotal, 0.0)')
+    cart_items.sum("COALESCE(subtotal, 0.0)")
   end
 
   # Return hash suitable for JSON
@@ -12,7 +12,7 @@ class Cart < ApplicationRecord
     {
       id: id,
       user_id: user_id,
-      total_amount: total_amount.to_d.to_s('F'),
+      total_amount: total_amount.to_d.to_s("F"),
       items: cart_items.includes(product: { images_attachments: :blob }).map do |it|
         {
           id: it.id,
@@ -22,11 +22,10 @@ class Cart < ApplicationRecord
             it.product.image_url :
             (it.product.images.attached? ? Rails.application.routes.url_helpers.url_for(it.product.images.first) : nil),
           quantity: it.quantity,
-          unit_price: it.unit_price.to_s('F'),
-          subtotal: it.subtotal.to_s('F')
+          unit_price: it.unit_price.to_s("F"),
+          subtotal: it.subtotal.to_s("F")
         }
       end
     }
   end
-
 end

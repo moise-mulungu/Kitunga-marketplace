@@ -40,10 +40,10 @@ gem "solid_queue"
 gem "solid_cable"
 
 # Use environment variables from .env.* files
-gem 'dotenv-rails', groups: [:development, :test]
+gem "dotenv-rails", groups: [ :development, :test ]
 
 # Use google recaptcha
-gem 'recaptcha', require: 'recaptcha/rails'
+gem "recaptcha", require: "recaptcha/rails"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -74,8 +74,8 @@ group :development do
   # Preview emails in the browser during development. Prefer letter_opener_web
   # which provides a browsable mailbox at /letter_opener. Falls back to
   # letter_opener if letter_opener_web isn't available.
-  gem 'letter_opener_web'
-  gem 'letter_opener'
+  gem "letter_opener_web"
+  gem "letter_opener"
 end
 
 group :test do

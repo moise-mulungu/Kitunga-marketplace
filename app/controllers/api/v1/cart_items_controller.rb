@@ -8,12 +8,12 @@ module Api
       # params: { cart_item: { product_id: integer, quantity: integer } }
       def create
         product = Product.find_by(id: cart_item_params[:product_id])
-        return render json: { error: 'Product not found' }, status: :not_found unless product
-        qty = [cart_item_params[:quantity].to_i, 1].max
+        return render json: { error: "Product not found" }, status: :not_found unless product
+        qty = [ cart_item_params[:quantity].to_i, 1 ].max
 
         # STOCK CHECK
         if product.quantity.present? && qty > product.quantity
-          return render json: { error: 'Not enough stock' }, status: :unprocessable_entity
+          return render json: { error: "Not enough stock" }, status: :unprocessable_entity
         end
 
         item = @cart.cart_items.find_by(product_id: product.id)
@@ -22,7 +22,7 @@ module Api
           if item
             new_qty = item.quantity + qty
             if product.quantity.present? && new_qty > product.quantity
-              return render json: { error: 'Not enough stock for requested quantity' }, status: :unprocessable_entity
+              return render json: { error: "Not enough stock for requested quantity" }, status: :unprocessable_entity
             end
             item.update!(quantity: new_qty)
           else
@@ -44,13 +44,13 @@ module Api
       # params: { cart_item: { quantity: integer } }
       def update
         item = @cart.cart_items.find_by(id: params[:id])
-        return render json: { error: 'Cart item not found' }, status: :not_found unless item
+        return render json: { error: "Cart item not found" }, status: :not_found unless item
 
         qty = cart_item_update_params[:quantity].to_i
-        return render json: { error: 'Invalid quantity' }, status: :unprocessable_entity if qty <= 0
+        return render json: { error: "Invalid quantity" }, status: :unprocessable_entity if qty <= 0
 
         if item.product.quantity.present? && qty > item.product.quantity
-          return render json: { error: 'Not enough stock' }, status: :unprocessable_entity
+          return render json: { error: "Not enough stock" }, status: :unprocessable_entity
         end
 
         item.update!(quantity: qty)
@@ -62,7 +62,7 @@ module Api
       # DELETE /api/v1/cart_items/:id
       def destroy
         item = @cart.cart_items.find_by(id: params[:id])
-        return render json: { error: 'Cart item not found' }, status: :not_found unless item
+        return render json: { error: "Cart item not found" }, status: :not_found unless item
 
         item.destroy
         render json: @cart.as_json_with_items, status: :ok

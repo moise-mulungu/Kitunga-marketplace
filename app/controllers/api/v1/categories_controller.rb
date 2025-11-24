@@ -2,13 +2,13 @@ module Api
   module V1
     class CategoriesController < BaseController
       # before_action :set_category, only: [:show, :update, :destroy]
-      skip_before_action :authorize_request, only: [:index]
+      skip_before_action :authorize_request, only: [ :index ]
 
       def index
         categories = Category.select(:id, :name, :slug, :description, :category_type)
         render json: categories
       end
-  
+
       def show
         render json: @category
       end

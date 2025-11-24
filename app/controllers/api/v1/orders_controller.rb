@@ -1,5 +1,5 @@
 class Api::V1::OrdersController <  Api::V1::BaseController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [ :index, :show ]
 
   def index
     orders = Order.all

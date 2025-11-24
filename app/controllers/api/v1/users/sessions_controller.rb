@@ -6,7 +6,7 @@ module Api
         # Skip CSRF for API
         # skip_before_action :verify_authenticity_token
         # Prevent Devise redirect hooks
-        skip_before_action :require_no_authentication, only: [:create]
+        skip_before_action :require_no_authentication, only: [ :create ]
         respond_to :json
 
         # POST /api/v1/users/sign_in
@@ -20,7 +20,7 @@ module Api
 
           # Case 1: user exists but not confirmed yet
           if user && !user.active_for_authentication?
-            return render json: { errors: ['Please confirm your email before logging in.'] }, status: :unauthorized
+            return render json: { errors: [ "Please confirm your email before logging in." ] }, status: :unauthorized
           end
 
           # Case 2: valid credentials
@@ -28,7 +28,7 @@ module Api
             token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
             render json: {
-              message: 'Login successful',
+              message: "Login successful",
               token: token,
               user: {
                 id: user.id,
@@ -43,7 +43,7 @@ module Api
             }, status: :ok
           else
             # Case 3: invalid email or password
-            render json: { errors: ['Invalid email or password'] }, status: :unauthorized
+            render json: { errors: [ "Invalid email or password" ] }, status: :unauthorized
           end
         end
 
@@ -53,15 +53,15 @@ module Api
           # Invalidate JWT: try to read the token from Authorization header or
           # from Warden env and add its jti to the JwtDenylist so it cannot be reused.
           token = nil
-          auth_header = request.headers['Authorization']
-          token = auth_header.split(' ').last if auth_header.present?
-          token ||= request.env['warden-jwt_auth.token']
+          auth_header = request.headers["Authorization"]
+          token = auth_header.split(" ").last if auth_header.present?
+          token ||= request.env["warden-jwt_auth.token"]
 
           if token.present?
             begin
-              payload = JWT.decode(token, ENV['DEVISE_JWT_SECRET_KEY'], true, { algorithm: 'HS256', verify_expiration: false }).first
-              JwtDenylist.find_or_create_by!(jti: payload['jti']) do |d|
-                d.exp = Time.at(payload['exp']) if payload['exp']
+              payload = JWT.decode(token, ENV["DEVISE_JWT_SECRET_KEY"], true, { algorithm: "HS256", verify_expiration: false }).first
+              JwtDenylist.find_or_create_by!(jti: payload["jti"]) do |d|
+                d.exp = Time.at(payload["exp"]) if payload["exp"]
               end
             rescue StandardError => e
               Rails.logger.warn "Failed to revoke token on sign_out: #{e.class} - #{e.message}"
@@ -76,7 +76,7 @@ module Api
 
         # Prevent Devise from redirecting for JSON API
         def respond_with(resource, _opts = {})
-          render json: { message: 'Login successful', user: resource }, status: :ok
+          render json: { message: "Login successful", user: resource }, status: :ok
         end
 
         def respond_to_on_destroy

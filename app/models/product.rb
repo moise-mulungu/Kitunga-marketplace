@@ -21,7 +21,7 @@ class Product < ApplicationRecord
     return unless title.present?
 
     category_part = category&.name.to_s.parameterize
-    base_slug = [category_part, title].compact.join('-').parameterize
+    base_slug = [ category_part, title ].compact.join("-").parameterize
 
     slug_candidate = base_slug
     counter = 2
@@ -37,7 +37,7 @@ class Product < ApplicationRecord
 
 
   def slug_cannot_start_with_reserved_word
-    if slug&.start_with?('category-')
+    if slug&.start_with?("category-")
       errors.add(:slug, "cannot start with 'category-' because it's reserved for routes")
     end
   end
@@ -65,16 +65,24 @@ class Product < ApplicationRecord
 
     if params[:sort].present?
       order = case params[:sort]
-              when 'price_asc' then 'price ASC'
-              when 'price_desc' then 'price DESC'
-              when 'newest' then 'created_at DESC'
-              else 'created_at DESC'
-              end
+      when "price_asc" then "price ASC"
+      when "price_desc" then "price DESC"
+      when "newest" then "created_at DESC"
+      else "created_at DESC"
+      end
       products = products.order(order)
     else
       products = products.order(created_at: :desc)
     end
 
     products
+  end
+
+  include Rails.application.routes.url_helpers
+
+  def primary_image_url
+    return nil unless images.attached?
+
+    rails_blob_url(images.first, only_path: false)
   end
 end

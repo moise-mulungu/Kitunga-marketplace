@@ -4,7 +4,7 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-    render json: { status: 'success', user: resource, token: current_token }, status: :ok
+    render json: { status: "success", user: resource, token: current_token }, status: :ok
   end
 
   def respond_to_on_destroy
@@ -12,6 +12,6 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   end
 
   def current_token
-    request.env['warden-jwt_auth.token']
+    request.env["warden-jwt_auth.token"]
   end
 end

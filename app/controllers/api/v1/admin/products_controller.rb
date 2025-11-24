@@ -10,7 +10,7 @@ module Api
         def transfer
           product = Product.find(params[:id])
           if protect_owner?(product.user)
-            return render json: { error: 'Cannot transfer product owned by owner admin' }, status: :forbidden
+            return render json: { error: "Cannot transfer product owned by owner admin" }, status: :forbidden
           end
 
           owner_id = params[:owner_id] || params[:ownerId]
@@ -18,7 +18,7 @@ module Api
 
           # Restrict transfer targets to sellers only
           unless target.seller?
-            return render json: { error: 'Target must be a seller' }, status: :unprocessable_entity
+            return render json: { error: "Target must be a seller" }, status: :unprocessable_entity
           end
 
           previous_owner_id = product.user_id
@@ -26,7 +26,7 @@ module Api
           if product.save
             # Record admin action for audit
             begin
-              AdminActionLog.create!(admin_id: current_user.id, action: 'transfer_product', details: { product_id: product.id, from: previous_owner_id, to: target.id }.to_json)
+              AdminActionLog.create!(admin_id: current_user.id, action: "transfer_product", details: { product_id: product.id, from: previous_owner_id, to: target.id }.to_json)
             rescue => _e
               Rails.logger.warn("Failed to record admin action: #{_e.message}")
             end
@@ -36,13 +36,13 @@ module Api
             render json: { error: product.errors.full_messages }, status: :unprocessable_entity
           end
         rescue ActiveRecord::RecordNotFound
-          render json: { error: 'Not found' }, status: :not_found
+          render json: { error: "Not found" }, status: :not_found
         end
 
         private
 
         def protect_owner?(user)
-          user && user.email.present? && user.email.downcase == 'moisemlg90@gmail.com'
+          user && user.email.present? && user.email.downcase == "moisemlg90@gmail.com"
         end
       end
     end

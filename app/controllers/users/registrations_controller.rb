@@ -8,7 +8,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
       # can use it immediately. For email signups requiring confirmation, do
       # not issue a token — instruct the frontend to ask the user to confirm.
       response_body = {
-        message: 'Sign up successful',
+        message: "Sign up successful",
         user: {
           id: user.id,
           full_name: user.full_name,
@@ -25,12 +25,12 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
         token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
         response_body[:token] = token
       else
-        response_body[:message] = 'Confirmation required. Please check your email for confirmation instructions.'
+        response_body[:message] = "Confirmation required. Please check your email for confirmation instructions."
       end
 
       render json: response_body, status: :created
     else
-      render json: { status: 'error', errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { status: "error", errors: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

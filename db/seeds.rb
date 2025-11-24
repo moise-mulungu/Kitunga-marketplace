@@ -249,11 +249,11 @@ customers.each do |customer|
     order.update!(total_amount: order.order_items.sum("quantity * price"))
 
     order.create_payment!(
-      payment_method: ["Flutterwave", "PayPal", "Card"].sample,
+      payment_method: [ "Flutterwave", "PayPal", "Card" ].sample,
       transaction_id: "TX#{rand(1000..9999)}#{('A'..'Z').to_a.sample(3).join}",
       amount: order.total_amount,
-      status: ["completed", "pending"].sample,
-      provider: ["Flutterwave", "PayPal", "Visa"].sample,
+      status: [ "completed", "pending" ].sample,
+      provider: [ "Flutterwave", "PayPal", "Visa" ].sample,
       paid_at: Time.now
     )
   end

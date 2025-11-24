@@ -6,6 +6,6 @@
 # provided as a compatibility option for certain flows, but it reduces CSRF
 # protection and should be used carefully.
 
-OmniAuth.config.allowed_request_methods = [:get, :post]
+OmniAuth.config.allowed_request_methods = [ :get, :post ]
 # Silence the omniauth GET request warning introduced in OmniAuth 2.x
 OmniAuth.config.silence_get_warning = true

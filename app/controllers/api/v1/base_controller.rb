@@ -25,10 +25,10 @@ module Api
       # is present but does not by itself block access (controllers can
       # call `authenticate_user!` to require authentication).
       def authorize_request
-        auth_header = request.headers['Authorization']
+        auth_header = request.headers["Authorization"]
         return unless auth_header.present?
 
-        token = auth_header.split(' ').last
+        token = auth_header.split(" ").last
         return unless token
 
         begin
@@ -45,13 +45,13 @@ module Api
       # mirrors Devise's `authenticate_user!` semantics for API controllers
       # that don't include Devise controller helpers.
       def authenticate_user!
-        render json: { error: 'Unauthorized' }, status: :unauthorized unless current_user
+        render json: { error: "Unauthorized" }, status: :unauthorized unless current_user
       end
 
       # Require the current user to be an admin
       def require_admin!
         unless current_user&.admin?
-          render json: { error: 'Forbidden' }, status: :forbidden
+          render json: { error: "Forbidden" }, status: :forbidden
         end
       end
 

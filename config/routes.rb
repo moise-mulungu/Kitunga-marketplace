@@ -25,11 +25,14 @@ Rails.application.routes.draw do
       resources :products
       resources :orders
       resources :order_items
-      resources :payments
+      resources :payments, only: [:index, :show, :create, :update, :destroy]
       # Cart
       resource :cart, only: [ :show, :destroy ], controller: "carts"
       resources :cart_items, only: [ :create, :update, :destroy ]
       post "checkout", to: "checkouts#create"
+      post "payments/verify", to: "payments#verify"
+      post "payments/webhook", to: "payments#webhook"
+
 
   # Token refresh endpoint for rotating JWTs
   post "/users/refresh", to: "users/token_refresh#create"
@@ -40,6 +43,8 @@ Rails.application.routes.draw do
         post "two_factor/confirm", to: "two_factor#confirm"
         post "two_factor/enable", to: "two_factor#enable"
         post "two_factor/disable", to: "two_factor#disable"
+        post "phone_verifications", to: "phone_verifications#create"
+        post "phone_verifications/resend", to: "phone_verifications#resend"
       end
 
       # Admin namespace for management endpoints
@@ -56,6 +61,13 @@ Rails.application.routes.draw do
             put "transfer"
           end
         end
+        resources :orders, only: [:index, :show]
+        resources :payments, only: [:index, :show]
+      end
+
+      # Seller namespace for seller-specific endpoints
+      namespace :seller do
+        resources :orders, only: [:index, :update]
       end
     end
   end

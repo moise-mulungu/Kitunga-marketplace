@@ -32,7 +32,20 @@ class Api::V1::OrdersController <  Api::V1::BaseController
 
   def update
     order = Order.find(params[:id])
-    if order.update(order_params)
+    
+    # Authorization: only allow status updates for sellers who own products in this order
+    if current_user.seller?
+      seller_product_ids = current_user.products.pluck(:id)
+      unless order.order_items.where(product_id: seller_product_ids).exists?
+        return render json: { error: "Unauthorized" }, status: :forbidden
+      end
+      # Sellers can only update status
+      permitted_params = order_params.slice(:status)
+    else
+      permitted_params = order_params
+    end
+    
+    if order.update(permitted_params)
       render json: order
     else
       render json: { errors: order.errors.full_messages }, status: :unprocessable_entity

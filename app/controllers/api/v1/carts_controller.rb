@@ -6,7 +6,17 @@ module Api
       # GET /api/v1/cart
       def show
         cart = find_or_create_cart_for(current_user)
-        render json: cart.as_json_with_items, status: :ok
+
+        # Create or get a pending order for this user
+        order = current_user.orders.find_or_create_by(status: "pending") do |o|
+          o.total_amount = cart.total_amount
+        end
+
+        # Always keep order total synced with the cart total
+        order.update(total_amount: cart.total_amount)
+
+        # Return extended cart JSON including order_id
+        render json: cart.as_json_with_items.merge(order_id: order.id), status: :ok
       end
 
       # DELETE /api/v1/cart

@@ -1,6 +1,14 @@
 class Api::V1::Users::SessionsController < Devise::SessionsController
   respond_to :json
 
+  def create
+    if verify_recaptcha
+      super
+    else
+      render json: { error: 'reCAPTCHA verification failed' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def respond_with(resource, _opts = {})

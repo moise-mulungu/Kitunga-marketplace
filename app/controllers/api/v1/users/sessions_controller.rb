@@ -14,8 +14,6 @@ module Api
           email = params.dig(:user, :email)
           password = params.dig(:user, :password)
 
-          Rails.logger.info "LOGIN DEBUG email=#{email.inspect} password=#{password.inspect}"
-
           user = User.find_for_database_authentication(email: email)
 
           # Case 1: user exists but not confirmed yet
@@ -23,10 +21,17 @@ module Api
             return render json: { errors: [ "Please confirm your email before logging in." ] }, status: :unauthorized
           end
 
+          # Case 1.5: user exists but deactivated
+          if user && !user.active?
+            return render json: { errors: [ "Your account has been deactivated. Please contact support." ] }, status: :unauthorized
+          end
+
           # Case 2: valid credentials
           if user&.valid_password?(password)
-            token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
-
+            # Use Devise's sign_in which will trigger JWT token generation
+            sign_in(user)
+            token = request.env['warden-jwt_auth.token']
+            
             render json: {
               message: "Login successful",
               token: token,

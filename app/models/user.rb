@@ -85,4 +85,8 @@ class User < ApplicationRecord
     totp = ROTP::TOTP.new(otp_secret)
     totp.verify(code, drift_behind: 30)
   end
+
+  def clear_otp
+    update(otp_code: nil)
+  end
 end

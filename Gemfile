@@ -45,6 +45,9 @@ gem "dotenv-rails", groups: [ :development, :test ]
 # Use google recaptcha
 gem "recaptcha", require: "recaptcha/rails"
 
+# Use Twilio for SMS
+gem "twilio-ruby"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -53,6 +56,10 @@ gem "kamal", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
+
+# Flutterwave SDK for Ruby
+gem 'flutterwave_sdk', '~> 0.1.1'
+gem 'httparty'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

@@ -19,13 +19,13 @@ The goal is to validate:
 
 ## 🗂️ Core Scope
 
-### 1. User Accounts & Roles
+### 1. User Accounts & Roles(done)
 
 * **Customer**: Sign up, log in/out, browse, add to cart, checkout, view past orders.
 * **Seller**: Sign up, log in/out, create and edit profile (business name, category, contact info, address, payment method).
 * **Admin (You)**: Basic dashboard to view/manage users, orders, and payments.
 
-### 2. Product Catalog
+### 2. Product Catalog(done)
 
 * Sellers can **add/edit/delete products** with:
 
@@ -35,7 +35,7 @@ The goal is to validate:
   * Browse all products, filter by category, search by name/keyword.
 * SEO-friendly **product detail pages**.
 
-### 3. Checkout & Payments
+### 3. Checkout & Payments(half-done)
 
 * **Cart system** with quantity update and price total. 
 * **Single integrated payment method** at launch (choose one of these depending on target region):

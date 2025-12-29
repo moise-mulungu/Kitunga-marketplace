@@ -15,6 +15,7 @@ admin = User.create!(
   password: "password",
   role: "admin"
 )
+admin.confirm # Confirm the admin user
 
 # --- SELLERS ---
 sellers_data = [
